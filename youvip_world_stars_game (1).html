@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>World Stars English — YouVIP × SQA Education</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #F5C400;
+    --yellow-dark: #e0b300;
+    --black: #1a1a1a;
+    --white: #ffffff;
+    --green: #22a74f;
+    --green-bg: #e6f7ec;
+    --green-border: #22a74f;
+    --red: #d63031;
+    --red-bg: #fdecea;
+    --red-border: #d63031;
+    --blue: #2563eb;
+    --blue-bg: #eff6ff;
+    --blue-border: #2563eb;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-400: #9ca3af;
+    --gray-600: #4b5563;
+    --gray-800: #1f2937;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito Sans', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    color: var(--gray-800);
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--black);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+  }
+  .header-logos { display: flex; align-items: center; gap: 14px; }
+  .logo-divider { width: 1px; height: 34px; background: rgba(255,255,255,0.2); }
+  .teacher-pill {
+    background: rgba(245,196,0,0.15);
+    border: 1px solid rgba(245,196,0,0.4);
+    color: var(--yellow);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  /* ── NAV TABS ── */
+  .nav-wrap {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    padding: 0 24px;
+    gap: 4px;
+  }
+  .nav-tab {
+    padding: 14px 20px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--gray-400);
+    cursor: pointer;
+    border: none;
+    background: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+    transition: all .2s;
+  }
+  .nav-tab:hover { color: var(--gray-600); }
+  .nav-tab.active { color: var(--black); border-bottom-color: var(--yellow); }
+
+  /* ── CONTENT ── */
+  .content { max-width: 720px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 17px;
+    color: var(--black);
+    margin-bottom: 10px;
+  }
+  .card-sub {
+    font-size: 14px;
+    color: var(--gray-600);
+    line-height: 1.65;
+    margin-bottom: 14px;
+  }
+  .card-sub strong { color: var(--black); font-weight: 700; }
+
+  /* ── GRAMMAR GRID ── */
+  .grammar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .g-box { border-radius: var(--radius-sm); padding: 12px 14px; }
+  .g-box.pos { background: var(--green-bg); border: 1px solid #a7f3c0; }
+  .g-box.neg { background: var(--red-bg); border: 1px solid #fca5a5; }
+  .g-box.qst { background: var(--blue-bg); border: 1px solid #bfdbfe; }
+  .g-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; margin-bottom: 6px; text-transform: uppercase; }
+  .g-box.pos .g-label { color: #166534; }
+  .g-box.neg .g-label { color: #991b1b; }
+  .g-box.qst .g-label { color: #1e3a8a; }
+  .g-ex { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 14px; color: var(--gray-800); margin-bottom: 4px; }
+  .g-note { font-size: 12px; color: var(--gray-600); }
+
+  /* ── PATTERN GRID ── */
+  .pattern-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .p-box { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-sm); padding: 12px 14px; }
+  .p-label { font-size: 10px; font-weight: 700; letter-spacing: .07em; color: var(--gray-400); text-transform: uppercase; margin-bottom: 6px; }
+  .p-formula { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 13px; color: var(--gray-800); margin-bottom: 4px; }
+  .p-example { font-size: 12px; color: var(--gray-600); }
+
+  /* ── TIPS ── */
+  .tip-row { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 10px; }
+  .tip-num {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--yellow); color: var(--black);
+    font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 13px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+  }
+  .tip-text { font-size: 14px; color: var(--gray-600); line-height: 1.55; }
+  .tip-text strong { color: var(--gray-800); }
+  .tip-divider { height: 1px; background: var(--gray-100); margin: 10px 0; }
+
+  /* ── QUIZ INTRO ── */
+  .quiz-intro { text-align: center; padding: 36px 24px; }
+  .quiz-intro-icon { font-size: 52px; margin-bottom: 12px; }
+  .quiz-intro h2 { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 26px; color: var(--black); margin-bottom: 8px; }
+  .quiz-intro p { font-size: 15px; color: var(--gray-600); margin-bottom: 20px; line-height: 1.6; }
+  .attempts-info {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #fffbea; border: 1px solid #fde68a;
+    border-radius: var(--radius-sm); padding: 10px 16px;
+    font-size: 13px; color: #92400e; font-weight: 600;
+    margin-bottom: 24px;
+  }
+  .start-btn {
+    background: var(--yellow); color: var(--black);
+    border: none; border-radius: var(--radius);
+    padding: 14px 40px;
+    font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 16px;
+    cursor: pointer; transition: background .15s, transform .1s;
+    box-shadow: 0 4px 14px rgba(245,196,0,0.4);
+  }
+  .start-btn:hover { background: var(--yellow-dark); transform: translateY(-1px); }
+  .start-btn:active { transform: translateY(0); }
+
+  /* ── SCORE BAR ── */
+  .score-bar { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .score-box { background: var(--white); border-radius: var(--radius-sm); padding: 12px 16px; text-align: center; box-shadow: var(--shadow); }
+  .score-box-label { font-size: 11px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+  .score-box-val { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 24px; color: var(--black); }
+
+  /* ── PROGRESS ── */
+  .progress-wrap { background: var(--gray-200); border-radius: 20px; height: 7px; margin-bottom: 16px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--yellow); border-radius: 20px; transition: width .4s ease; }
+
+  /* ── QUESTION CARD ── */
+  .q-card { background: var(--white); border-radius: var(--radius); padding: 20px 22px; box-shadow: var(--shadow); }
+  .q-celeb-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .q-avatar {
+    width: 54px; height: 54px; border-radius: 50%;
+    background: var(--gray-100); display: flex; align-items: center; justify-content: center;
+    font-size: 26px; flex-shrink: 0; border: 2px solid var(--gray-200);
+  }
+  .q-celeb-name { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 18px; color: var(--black); }
+  .q-celeb-hint { font-size: 13px; color: var(--gray-400); margin-top: 2px; }
+  .q-badges { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .badge-type {
+    background: var(--yellow); color: var(--black);
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 12px;
+    padding: 4px 12px; border-radius: 20px;
+  }
+  .badge-form {
+    font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+  }
+  .badge-form.pos { background: var(--green-bg); color: #166534; }
+  .badge-form.neg { background: var(--red-bg); color: #991b1b; }
+  .badge-form.int { background: var(--blue-bg); color: #1e3a8a; }
+
+  .q-text { font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 16px; color: var(--gray-800); margin-bottom: 16px; line-height: 1.45; }
+
+  /* ── OPTIONS ── */
+  .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .opt {
+    background: var(--gray-50); border: 2px solid var(--gray-200);
+    border-radius: var(--radius-sm); padding: 13px 16px;
+    font-family: 'Nunito Sans', sans-serif; font-size: 14px; font-weight: 600;
+    color: var(--gray-800); cursor: pointer; text-align: left;
+    transition: all .15s; line-height: 1.35;
+  }
+  .opt:hover:not(:disabled) { background: var(--white); border-color: var(--yellow); transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.07); }
+  .opt:disabled { cursor: default; transform: none; box-shadow: none; }
+  .opt.correct { background: var(--green-bg); border-color: var(--green); color: #166534; }
+  .opt.wrong { background: var(--red-bg); border-color: var(--red); color: #991b1b; }
+  .opt.reveal { background: var(--green-bg); border-color: var(--green); color: #166534; }
+
+  /* ── PIPS ── */
+  .pips { display: flex; gap: 6px; margin-bottom: 8px; }
+  .pip { width: 11px; height: 11px; border-radius: 50%; background: var(--gray-200); border: 1px solid var(--gray-300); transition: background .2s; }
+  .pip.wrong { background: #fca5a5; border-color: var(--red); }
+  .pip.correct { background: #86efac; border-color: var(--green); }
+
+  /* ── HINT ── */
+  .try-hint { font-size: 12px; color: var(--gray-400); text-align: center; min-height: 18px; margin-bottom: 4px; font-weight: 600; }
+
+  /* ── FEEDBACK ── */
+  .feedback {
+    border-radius: var(--radius-sm); padding: 14px 16px;
+    font-size: 14px; font-weight: 600; line-height: 1.55;
+    display: none; margin-top: 12px;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct { background: var(--green-bg); color: #166534; border: 1px solid #a7f3c0; }
+  .feedback.wrong { background: var(--red-bg); color: #991b1b; border: 1px solid #fca5a5; }
+  .feedback-tip { margin-top: 8px; font-size: 12px; font-weight: 600; opacity: .85; }
+
+  /* ── NEXT BTN ── */
+  .next-btn {
+    width: 100%; margin-top: 14px;
+    background: var(--yellow); color: var(--black);
+    border: none; border-radius: var(--radius);
+    padding: 13px; font-family: 'Nunito', sans-serif;
+    font-weight: 900; font-size: 15px; cursor: pointer;
+    display: none; transition: background .15s;
+  }
+  .next-btn.show { display: block; }
+  .next-btn:hover { background: var(--yellow-dark); }
+
+  /* ── END SCREEN ── */
+  .end-screen { text-align: center; padding: 40px 24px; }
+  .end-trophy { font-size: 60px; margin-bottom: 12px; }
+  .end-title { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 28px; color: var(--black); margin-bottom: 6px; }
+  .end-score { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 64px; color: var(--black); line-height: 1; }
+  .end-score-label { font-size: 14px; color: var(--gray-400); font-weight: 600; margin-bottom: 10px; }
+  .end-sub { font-size: 15px; color: var(--gray-600); margin-bottom: 28px; line-height: 1.6; }
+  .end-btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--yellow); color: var(--black); border: none;
+    border-radius: var(--radius); padding: 13px 28px;
+    font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 15px;
+    cursor: pointer; transition: background .15s;
+    box-shadow: 0 4px 14px rgba(245,196,0,0.35);
+  }
+  .btn-primary:hover { background: var(--yellow-dark); }
+  .btn-secondary {
+    background: var(--white); color: var(--gray-800);
+    border: 2px solid var(--gray-200); border-radius: var(--radius);
+    padding: 13px 28px; font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: 15px; cursor: pointer; transition: border-color .15s;
+  }
+  .btn-secondary:hover { border-color: var(--gray-400); }
+  .collab-footer { font-size: 12px; color: var(--gray-400); margin-top: 24px; font-weight: 600; }
+
+  @media(max-width:480px){
+    .grammar-grid, .pattern-grid, .options-grid { grid-template-columns: 1fr; }
+    .header { padding: 12px 16px; }
+    .content { padding: 16px 12px 60px; }
+    .card { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-logos">
+    <!-- SQA Education SVG logo -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 571.5" style="height:30px;width:auto;">
+      <path fill="#f58220" d="M549.3,70.9c-2.8,0-5.5,0-8.3,0-2.8,0-5.6,0-8.3.1l2.1,163.6c.3,25.2.7,50.5,1,75.7-3.1-25-6.1-50.1-9.2-75.1l-20-162.4c-1.8.2-3.5.4-5.3.6l-6.1.8c-1.7.2-3.4.5-5.1.8l23.4,161.9c3.6,25,7.2,49.9,10.8,74.9-6.3-24.4-12.6-48.9-19-73.3l-41-158.4c-.8.2-1.5.4-2.3.6l-12.2,3.3c-.5.2-1,.3-1.5.5l44.4,157.5c6.8,24.3,13.7,48.6,20.5,72.9-9.5-23.4-18.9-46.8-28.4-70.2l-61.4-151.7c-.4.2-.8.3-1.2.5l-12.1,5.1c-.7.3-1.3.6-2,.9l64.6,150.4c9.9,23.2,19.9,46.4,29.9,69.6-12.4-21.9-24.8-43.9-37.3-65.9l-80.6-142.4c-1,.6-2,1.2-3.1,1.7l-7.9,4.6c-1.1.7-2.2,1.3-3.4,2l83.6,140.6c12.9,21.7,25.8,43.4,38.7,65.1-15.2-20.1-30.4-40.3-45.6-60.4l-98.5-130.6c-4.5,3.3-8.9,6.7-13.2,10.2l101.2,128.5c15.6,19.8,31.2,39.6,46.8,59.5-17.7-18-35.4-36-53.1-54l-114.7-116.7c-4,3.8-7.9,7.8-11.7,11.8l117.2,114.2c19.6,19.1,39.2,38.2,58.8,57.3,2.5-2.9,5.2-5.6,8-8.1,2.7-2.3,5.5-4.5,8.5-6.5,3-2,6.1-3.8,9.3-5.3,3.2-1.6,6.5-2.9,9.9-4.1,3.4-1.1,6.8-2.1,10.3-2.7,3.5-.7,7-1.1,10.6-1.4,1.7-.1,3.3-.2,5-.2,1.7,0,3.3,0,5,.2,3.6.2,7.2.7,10.6,1.3,3.5.7,7,1.6,10.4,2.7,3.4,1.1,6.7,2.5,9.9,4,3.2,1.6,6.3,3.3,9.3,5.3,3,2,5.8,4.1,8.5,6.5,2.9,2.5,5.6,5.2,8.1,8,19.5-19.2,39-38.3,58.5-57.5l116.7-114.7c-3.8-4-7.8-7.9-11.8-11.7l-114.2,117.2c-17.6,18-35.2,36.2-52.8,54.2,15.5-19.9,31.1-39.8,46.6-59.7l100.7-128.9c-4.3-3.5-8.7-6.8-13.2-10.1l-97.9,131.1c-15.1,20.2-30.2,40.4-45.3,60.6,12.8-21.8,25.6-43.5,38.4-65.2l83-141c-1.1-.7-2.3-1.4-3.4-2l-7.9-4.6c-1-.6-2-1.1-3.1-1.7l-80,142.8c-12.4,22-24.7,44-37,66,9.8-23.2,19.7-46.4,29.6-69.7l63.9-150.7c-.6-.3-1.3-.6-2-.8l-12.2-5c-.4-.2-.8-.3-1.2-.5l-60.7,152c-9.4,23.4-18.7,46.9-28.1,70.3,6.7-24.3,13.5-48.6,20.2-72.9l43.7-157.7c-.5-.2-1-.3-1.6-.5l-12.2-3.2c-.8-.2-1.5-.4-2.3-.6l-40.3,158.6c-6.3,24.4-12.4,48.9-18.7,73.4,3.5-25,7-50,10.5-75l22.7-162c-1.7-.3-3.4-.5-5.1-.7l-6.1-.8c-1.7-.2-3.5-.4-5.2-.6l-19.3,162.5c-3,25.1-5.9,50.1-8.9,75.2.2-25.2.5-50.5.6-75.7l1.4-163.6Z"/>
+      <g fill="#60489d">
+        <path d="M68.9,464.7c7.6,4.9,16.6,7,22.2,7s9.9-2.2,9.9-7.5-6.6-7.1-15.7-10.1c-9.8-3.2-18.6-8-18.6-20.3s10-21.4,24.8-21.4,15.5,1.8,21.6,5.1v15.4c-7.5-4.7-16.2-6.8-21.7-6.8s-9.1,2-9.1,6.6,6.6,6.7,15.1,9.6c10.7,3.5,19.3,8.5,19.3,21s-10.5,22.1-25.7,22.1-15.5-1.8-22-5v-15.6Z"/>
+        <path d="M171.1,485.3c-20.7-.4-36.3-16-36.3-36.5s15.9-36.5,37-36.5,37,15.8,37,36.5-8.1,27.1-20.4,32.9v.2c6,3.9,13.1,7.6,19.9,10.5l-14.2,8.3c-8.7-4-16.7-9.8-22.9-15.4ZM193.2,448.9c0-12.5-9.2-22.4-21.4-22.4s-21.4,9.9-21.4,22.4,9.2,22.4,21.4,22.4,21.4-9.9,21.4-22.4Z"/>
+        <path d="M250.3,413.5h15.1l28.8,70.8h-16.6l-5.7-14.9h-28.6l-5.8,14.9h-15.9l28.8-70.8ZM248.1,457.2h19.1l-2.9-7.9c-2.1-5.6-4.6-12.6-6.5-18h-.2c-1.9,5.4-4.4,12.4-6.6,18.4l-2.8,7.5Z"/>
+        <path d="M348.5,413.5h43.7v13.6h-28.2v13.9h24.3v12.9h-24.3v16.8h29.2v13.6h-44.8v-70.8Z"/>
+        <path d="M415.6,413.5h19.9c28.2,0,43.3,12.6,43.3,35.3s-13.7,35.5-44,35.5h-19.2v-70.8ZM435.4,470.7c19.6,0,27.8-7.9,27.8-21.9s-2.9-13.7-8.2-17.4c-5-3.5-11.7-4.3-19.7-4.3h-4.2v43.6h4.3Z"/>
+        <path d="M499.8,450.3v-36.9h15.5v36.3c0,14.9,3.3,21.6,15.6,21.6s15.5-6.3,15.5-21.5v-36.4h15v36.5c0,10.7-1.5,18.4-5.5,24.1-5,7.1-14.1,11.3-25.4,11.3s-20.5-4.2-25.5-11.5c-3.8-5.7-5.3-13.4-5.3-23.5Z"/>
+        <path d="M621.4,412.4c7.1,0,14.1,1.7,19.7,4.4v15.7c-5.2-3.5-12.3-6.2-19.6-6.2-13.7,0-23.1,9.6-23.1,22.4s9.1,22.6,23.7,22.6,14.2-2.5,20-6.6v15.8c-6.1,3.2-13.7,4.7-20.7,4.7-22.8,0-38.5-15.7-38.5-36.4s15.7-36.6,38.5-36.6Z"/>
+        <path d="M687.4,413.5h15.1l28.8,70.8h-16.6l-5.7-14.9h-28.6l-5.8,14.9h-15.9l28.8-70.8ZM685.1,457.2h19.1l-2.9-7.9c-2.1-5.6-4.6-12.6-6.5-18h-.2c-1.9,5.4-4.4,12.4-6.6,18.4l-2.8,7.5Z"/>
+        <path d="M759.6,427.1h-22.9v-13.6h61.3v13.6h-22.9v57.2h-15.5v-57.2Z"/>
+        <path d="M818.2,413.5h15.5v70.8h-15.5v-70.8Z"/>
+        <path d="M855.8,448.9c0-20.6,15.9-36.5,37-36.5s37,15.8,37,36.5-15.9,36.5-37,36.5-37-15.8-37-36.5ZM914.1,448.9c0-12.5-9.2-22.4-21.4-22.4s-21.4,9.9-21.4,22.4,9.2,22.4,21.4,22.4,21.4-9.9,21.4-22.4Z"/>
+        <path d="M980,455.7c-4.6-6.2-8.9-12.1-13.3-18.3h-.2c0,6.8.2,13.7.2,20.5v26.3h-15v-70.8h14.7l21.2,28.6c4.6,6.2,8.9,12.1,13.3,18.3h.2c0-6.8-.2-13.7-.2-20.5v-26.3h15v70.8h-14.7l-21.2-28.6Z"/>
+      </g>
+    </svg>
+    <div class="logo-divider"></div>
+    <!-- YouVIP SVG logo -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 240" style="height:30px;width:auto;">
+      <rect x="0" y="0" width="440" height="200" rx="28" fill="#F5C400"/>
+      <polygon points="280,200 310,240 340,200" fill="#F5C400"/>
+      <text x="26" y="138" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="108" fill="#1a1a1a">you</text>
+      <text x="220" y="138" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="108" fill="#ffffff">vip</text>
+      <text x="408" y="138" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="108" fill="#ffffff">.</text>
+      <text x="26" y="178" font-family="Arial,sans-serif" font-weight="400" font-size="27" letter-spacing="8" fill="#1a1a1a">ENGLISH CENTER</text>
+    </svg>
+  </div>
+  <span class="teacher-pill">with teacher Fernanda</span>
+</div>
+
+<!-- NAV -->
+<div class="nav-wrap">
+  <button class="nav-tab active" onclick="showTab('lesson')">📖 Lesson</button>
+  <button class="nav-tab" onclick="showTab('tips')">💡 Quick Tips</button>
+  <button class="nav-tab" onclick="showTab('quiz')">🎮 Quiz Game</button>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- ── LESSON ── -->
+  <div id="tab-lesson" class="screen active">
+
+    <div class="card">
+      <div class="card-title">What is a country? What is a nationality?</div>
+      <div class="card-sub">A <strong>country</strong> is the place — like Brazil, the USA, or Colombia. A <strong>nationality</strong> is the adjective that describes a person from that place — Brazilian, American, Colombian. We use the verb <strong>to be</strong> with nationalities.</div>
+      <div class="pattern-grid">
+        <div class="p-box"><div class="p-label">Country</div><div class="p-formula">She is from + country</div><div class="p-example">She is from Brazil.</div></div>
+        <div class="p-box"><div class="p-label">Nationality</div><div class="p-formula">She is + nationality</div><div class="p-example">She is Brazilian.</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">✅ Affirmative (positive)</div>
+      <div class="grammar-grid">
+        <div class="g-box pos"><div class="g-label">Affirmative</div><div class="g-ex">He is American.</div><div class="g-note">Bruno Mars — born in Hawaii, USA</div></div>
+        <div class="g-box pos"><div class="g-label">Affirmative</div><div class="g-ex">She is Brazilian.</div><div class="g-note">Anitta — born in Rio de Janeiro</div></div>
+        <div class="g-box pos"><div class="g-label">Affirmative</div><div class="g-ex">He is Puerto Rican.</div><div class="g-note">Bad Bunny — born in Puerto Rico</div></div>
+        <div class="g-box pos"><div class="g-label">Affirmative</div><div class="g-ex">She is Colombian.</div><div class="g-note">Shakira — born in Barranquilla</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">❌ Negative — He / She is NOT...</div>
+      <div class="card-sub">Add <strong>not</strong> after the verb to be, or use the contraction <strong>isn't</strong>.</div>
+      <div class="grammar-grid">
+        <div class="g-box neg"><div class="g-label">Negative — full form</div><div class="g-ex">Bruno Mars is not Brazilian.</div><div class="g-note">He is American — from Hawaii!</div></div>
+        <div class="g-box neg"><div class="g-label">Negative — contraction</div><div class="g-ex">Neymar isn't Spanish.</div><div class="g-note">He is Brazilian — from São Paulo!</div></div>
+        <div class="g-box neg"><div class="g-label">Negative — full form</div><div class="g-ex">Shakira is not from Brazil.</div><div class="g-note">She is from Colombia.</div></div>
+        <div class="g-box neg"><div class="g-label">Negative — contraction</div><div class="g-ex">Taylor Swift isn't British.</div><div class="g-note">She is American — from Pennsylvania!</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">❓ Interrogative — questions</div>
+      <div class="card-sub">Put the verb <strong>to be</strong> before the subject for yes/no questions. Use <strong>Where</strong> or <strong>What nationality</strong> for open questions.</div>
+      <div class="grammar-grid">
+        <div class="g-box qst"><div class="g-label">Yes / No question</div><div class="g-ex">Is Bad Bunny Colombian?</div><div class="g-note">No, he isn't. He is Puerto Rican.</div></div>
+        <div class="g-box qst"><div class="g-label">Yes / No question</div><div class="g-ex">Is Anitta Brazilian?</div><div class="g-note">Yes, she is!</div></div>
+        <div class="g-box qst"><div class="g-label">Where question</div><div class="g-ex">Where is Karol G from?</div><div class="g-note">She is from Colombia.</div></div>
+        <div class="g-box qst"><div class="g-label">Where question</div><div class="g-ex">Where is Ronaldo from?</div><div class="g-note">He is from Portugal.</div></div>
+        <div class="g-box qst"><div class="g-label">What nationality</div><div class="g-ex">What nationality is BTS?</div><div class="g-note">They are South Korean.</div></div>
+        <div class="g-box qst"><div class="g-label">What nationality</div><div class="g-ex">What nationality is Luan Santana?</div><div class="g-note">He is Brazilian.</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── TIPS ── -->
+  <div id="tab-tips" class="screen">
+    <div class="card">
+      <div class="card-title">Quick Tips</div>
+      <div class="tip-row"><div class="tip-num">1</div><div class="tip-text"><strong>Nationality adjectives are ALWAYS capitalized in English!</strong> Write <strong>Brazilian</strong>, not <em>brazilian</em>. Same for American, Colombian, Portuguese...</div></div>
+      <div class="tip-divider"></div>
+      <div class="tip-row"><div class="tip-num">2</div><div class="tip-text"><strong>Use "is" for one person, "are" for a group.</strong> "Anitta is Brazilian." but "BTS are South Korean."</div></div>
+      <div class="tip-divider"></div>
+      <div class="tip-row"><div class="tip-num">3</div><div class="tip-text"><strong>"Isn't" = is not.</strong> They mean exactly the same thing! Use contractions in conversation, full form in formal writing.</div></div>
+      <div class="tip-divider"></div>
+      <div class="tip-row"><div class="tip-num">4</div><div class="tip-text"><strong>Questions: flip the subject and verb!</strong> "Anitta IS Brazilian." becomes "IS Anitta Brazilian?" — just move "is" to the front.</div></div>
+      <div class="tip-divider"></div>
+      <div class="tip-row"><div class="tip-num">5</div><div class="tip-text"><strong>"Where are you from?" vs "What is your nationality?"</strong> Both correct! First is more conversational, second is more formal.</div></div>
+      <div class="tip-divider"></div>
+      <div class="tip-row"><div class="tip-num">6</div><div class="tip-text"><strong>Short answers:</strong> "Is Taylor Swift American?" → "<strong>Yes, she is.</strong>" or "<strong>No, she isn't.</strong>" Always include the pronoun — just "Yes" sounds rude in English!</div></div>
+      <div class="tip-divider"></div>
+      <div class="tip-row"><div class="tip-num">7</div><div class="tip-text"><strong>Never mix "from" with a nationality adjective.</strong> Say "She is FROM Brazil" OR "She is BRAZILIAN" — never "She is from Brazilian."</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Patterns at a glance</div>
+      <div class="pattern-grid">
+        <div class="p-box"><div class="p-label">Affirmative</div><div class="p-formula">Subject + is/are + nationality</div><div class="p-example">She is Colombian.</div></div>
+        <div class="p-box"><div class="p-label">Negative (full)</div><div class="p-formula">Subject + is/are + not + nationality</div><div class="p-example">He is not British.</div></div>
+        <div class="p-box"><div class="p-label">Negative (short)</div><div class="p-formula">Subject + isn't/aren't + nationality</div><div class="p-example">He isn't British.</div></div>
+        <div class="p-box"><div class="p-label">Yes/No question</div><div class="p-formula">Is/Are + subject + nationality?</div><div class="p-example">Is she Korean?</div></div>
+        <div class="p-box"><div class="p-label">Where question</div><div class="p-formula">Where + is/are + subject + from?</div><div class="p-example">Where is he from?</div></div>
+        <div class="p-box"><div class="p-label">What nationality</div><div class="p-formula">What nationality + is/are + subject?</div><div class="p-example">What nationality is she?</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── QUIZ ── -->
+  <div id="tab-quiz" class="screen">
+
+    <div id="quiz-intro" class="card">
+      <div class="quiz-intro">
+        <div class="quiz-intro-icon">🎮</div>
+        <h2>World Stars Quiz</h2>
+        <p>Test affirmative, negative, and interrogative forms using celebrities you know and love!</p>
+        <div class="attempts-info">💡 You get <span style="margin:0 4px">2 attempts</span> per question — wrong first try earns half a point!</div>
+        <br>
+        <button class="start-btn" onclick="startQuiz()">Start Quiz →</button>
+      </div>
+    </div>
+
+    <div id="quiz-game" style="display:none;">
+      <div class="score-bar">
+        <div class="score-box"><div class="score-box-label">Score</div><div class="score-box-val" id="scoreVal">0</div></div>
+        <div class="score-box"><div class="score-box-label">Streak</div><div class="score-box-val" id="streakVal">0</div></div>
+        <div class="score-box"><div class="score-box-label">Question</div><div class="score-box-val" id="qNum">1/10</div></div>
+      </div>
+      <div class="progress-wrap"><div class="progress-fill" id="progressFill" style="width:10%"></div></div>
+
+      <div class="q-card">
+        <div class="q-celeb-row">
+          <div class="q-avatar" id="qAvatar"></div>
+          <div><div class="q-celeb-name" id="qName"></div><div class="q-celeb-hint" id="qHint"></div></div>
+        </div>
+        <div class="q-badges">
+          <span class="badge-type" id="qBadge"></span>
+          <span class="badge-form" id="qForm"></span>
+        </div>
+        <div class="q-text" id="qText"></div>
+        <div class="options-grid" id="optionsGrid"></div>
+        <div class="pips" id="pipRow"></div>
+        <div class="try-hint" id="tryHint"></div>
+        <div class="feedback" id="feedbackBox"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQ()">Next question →</button>
+      </div>
+    </div>
+
+    <div id="quiz-end" style="display:none;">
+      <div class="card">
+        <div class="end-screen">
+          <div class="end-trophy" id="endTrophy"></div>
+          <div class="end-title" id="endTitle"></div>
+          <div class="end-score" id="endScore"></div>
+          <div class="end-score-label">out of 10 points</div>
+          <div class="end-sub" id="endSub"></div>
+          <div class="end-btn-row">
+            <button class="btn-primary" onclick="restartQuiz()">Play again</button>
+            <button class="btn-secondary" onclick="showTab('lesson')">Review lesson</button>
+          </div>
+          <div class="collab-footer">SQA Education × YouVIP English Center</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const Qs=[
+  {celeb:"Bruno Mars",emoji:"🎤",hint:"Singer & songwriter — USA",type:"pos",
+   q:"Complete the sentence: Bruno Mars _____ American.",
+   correct:"is",opts:["is","are","isn't","is not"],
+   fact:"'He IS American.' For he/she/it, always use IS. Bruno was born in Honolulu, Hawaii.",
+   tip:"Formula: Subject + IS + nationality."},
+  {celeb:"Bad Bunny",emoji:"🐰",hint:"Reggaeton superstar — Puerto Rico",type:"neg",
+   q:"Bad Bunny is NOT Colombian. Choose the correct negative sentence.",
+   correct:"Bad Bunny isn't Colombian.",
+   opts:["Bad Bunny isn't Colombian.","Bad Bunny not Colombian.","Bad Bunny is Colombian not.","Bad Bunny no is Colombian."],
+   fact:"Bad Bunny isn't Colombian — he is Puerto Rican!",
+   tip:"Negative formula: Subject + ISN'T + nationality."},
+  {celeb:"Anitta",emoji:"🌟",hint:"Pop icon — Brazil",type:"int",
+   q:"How do you ask about Anitta's nationality?",
+   correct:"Is Anitta Brazilian?",
+   opts:["Is Anitta Brazilian?","Anitta is Brazilian?","Does Anitta is Brazilian?","Anitta Brazilian is?"],
+   fact:"Yes, she is! To form a yes/no question, move IS to the front.",
+   tip:"Question formula: IS + subject + nationality?"},
+  {celeb:"Shakira",emoji:"💃",hint:"Singer & dancer — Colombia",type:"neg",
+   q:"Shakira is not from Brazil. Which sentence is correct?",
+   correct:"She is not from Brazil.",
+   opts:["She is not from Brazil.","She not is from Brazil.","She is from not Brazil.","She no is from Brazil."],
+   fact:"NOT always comes after IS: 'She IS NOT from Brazil.' She is from Colombia.",
+   tip:"Negative: Subject + IS + NOT + from + country."},
+  {celeb:"Neymar Jr.",emoji:"⚽",hint:"Football legend — Brazil",type:"int",
+   q:"Which is the correct 'where' question about Neymar?",
+   correct:"Where is Neymar from?",
+   opts:["Where is Neymar from?","Where Neymar is from?","Where from is Neymar?","From where Neymar is?"],
+   fact:"'Where IS Neymar from?' — He is from Brazil!",
+   tip:"Where question: WHERE + IS + subject + FROM?"},
+  {celeb:"Taylor Swift",emoji:"🎸",hint:"Pop megastar — USA",type:"neg",
+   q:"Taylor Swift is NOT British. Choose the correct contraction.",
+   correct:"Taylor Swift isn't British.",
+   opts:["Taylor Swift isn't British.","Taylor Swift not British.","Taylor Swift is'nt British.","Taylor Swift are not British."],
+   fact:"'Isn't' = 'is not'. Taylor isn't British — she is American!",
+   tip:"ISN'T = IS NOT. Identical in meaning."},
+  {celeb:"Cristiano Ronaldo",emoji:"⚽",hint:"Football legend — Portugal",type:"pos",
+   q:"Choose the correct affirmative sentence about Ronaldo.",
+   correct:"He is Portuguese.",
+   opts:["He is Portuguese.","He are Portuguese.","He is Portugues.","He is from Portuguese."],
+   fact:"'He IS Portuguese.' Note: the nationality is Portuguese, not 'Portugues'!",
+   tip:"Never say 'from + nationality adjective'. Use: He is FROM Portugal OR He is Portuguese."},
+  {celeb:"Karol G",emoji:"🦋",hint:"La Bichota — Colombia",type:"int",
+   q:"Someone asks: 'Is Karol G Mexican?' What is the correct SHORT answer?",
+   correct:"No, she isn't.",
+   opts:["No, she isn't.","No, she is not.","No, she not.","No."],
+   fact:"'No, she isn't.' Short answers use subject pronoun + is/isn't. Just saying 'No' sounds rude!",
+   tip:"Short answer: Yes, she is. / No, she isn't. Always include the pronoun."},
+  {celeb:"BTS",emoji:"🎶",hint:"K-pop group — South Korea",type:"int",
+   q:"How do you ask about BTS's nationality? (They = a group!)",
+   correct:"What nationality are BTS?",
+   opts:["What nationality are BTS?","What nationality is BTS?","What nationality BTS are?","What BTS nationality are?"],
+   fact:"For groups, use ARE. 'What nationality ARE BTS?' — They are South Korean!",
+   tip:"For groups or plurals: use ARE, not IS."},
+  {celeb:"Luan Santana",emoji:"🤠",hint:"Sertanejo star — Brazil",type:"neg",
+   q:"Complete: Luan Santana _____ from Portugal — he is from Brazil!",
+   correct:"isn't",
+   opts:["isn't","is","aren't","not"],
+   fact:"'Luan Santana ISN'T from Portugal — he is from Brazil!'",
+   tip:"Negative with FROM: Subject + ISN'T + from + country."}
+];
+
+let cur=0,score=0,streak=0,attempts=2,done=false,shuffled=[];
+
+function showTab(t){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  document.querySelectorAll('.nav-tab')[{lesson:0,tips:1,quiz:2}[t]].classList.add('active');
+}
+
+function shuffle(a){return[...a].sort(()=>Math.random()-.5);}
+
+function startQuiz(){
+  cur=0;score=0;streak=0;
+  document.getElementById('quiz-intro').style.display='none';
+  document.getElementById('quiz-game').style.display='block';
+  document.getElementById('quiz-end').style.display='none';
+  document.getElementById('scoreVal').textContent='0';
+  document.getElementById('streakVal').textContent='0';
+  loadQ();
+}
+
+function loadQ(){
+  const q=Qs[cur]; attempts=2; done=false;
+  document.getElementById('qNum').textContent=(cur+1)+'/10';
+  document.getElementById('progressFill').style.width=((cur+1)/10*100)+'%';
+  document.getElementById('qAvatar').textContent=q.emoji;
+  document.getElementById('qName').textContent=q.celeb;
+  document.getElementById('qHint').textContent=q.hint;
+  document.getElementById('qBadge').textContent=q.type==='pos'?'Affirmative':q.type==='neg'?'Negative':'Question';
+  const form=document.getElementById('qForm');
+  form.textContent=q.type==='pos'?'positive':q.type==='neg'?'negative':'interrogative';
+  form.className='badge-form '+(q.type==='pos'?'pos':q.type==='neg'?'neg':'int');
+  document.getElementById('qText').textContent=q.q;
+  document.getElementById('feedbackBox').className='feedback';
+  document.getElementById('feedbackBox').innerHTML='';
+  document.getElementById('nextBtn').className='next-btn';
+  document.getElementById('tryHint').textContent='Choose your answer — you have 2 attempts!';
+  // pips
+  const pr=document.getElementById('pipRow');
+  pr.innerHTML='<div class="pip" id="pip0"></div><div class="pip" id="pip1"></div>';
+  // options
+  shuffled=shuffle(q.opts);
+  const grid=document.getElementById('optionsGrid');
+  grid.innerHTML='';
+  shuffled.forEach(opt=>{
+    const b=document.createElement('button');
+    b.className='opt'; b.textContent=opt;
+    b.onclick=()=>pick(opt,b,q);
+    grid.appendChild(b);
+  });
+}
+
+function pick(chosen,btn,q){
+  if(done)return;
+  const allBtns=document.querySelectorAll('.opt');
+  if(chosen===q.correct){
+    done=true;
+    allBtns.forEach(b=>{b.disabled=true;if(b.textContent===q.correct)b.classList.add('correct');});
+    document.getElementById('pip'+(2-attempts)).className='pip correct';
+    const fb=document.getElementById('feedbackBox');
+    if(attempts===2){
+      score+=1; streak++;
+      document.getElementById('scoreVal').textContent=score;
+      document.getElementById('streakVal').textContent=streak+(streak>=3?' 🔥':'');
+      fb.className='feedback correct show';
+      fb.innerHTML='✅ Correct first try! +1 point. '+q.fact+'<div class="feedback-tip">💡 Grammar tip: '+q.tip+'</div>';
+    } else {
+      score+=0.5; streak=0;
+      document.getElementById('scoreVal').textContent=score%1===0?score:score.toFixed(1);
+      document.getElementById('streakVal').textContent='0';
+      fb.className='feedback correct show';
+      fb.innerHTML='✅ Correct second try! +0.5 points. '+q.fact+'<div class="feedback-tip">💡 Grammar tip: '+q.tip+'</div>';
+    }
+    document.getElementById('tryHint').textContent='';
+    document.getElementById('nextBtn').className='next-btn show';
+  } else {
+    attempts--;
+    document.getElementById('pip'+(2-attempts-1)).className='pip wrong';
+    btn.classList.add('wrong'); btn.disabled=true;
+    if(attempts===0){
+      done=true; streak=0;
+      document.getElementById('streakVal').textContent='0';
+      allBtns.forEach(b=>{b.disabled=true;if(b.textContent===q.correct)b.classList.add('reveal');});
+      const fb=document.getElementById('feedbackBox');
+      fb.className='feedback wrong show';
+      fb.innerHTML='❌ No more attempts! The correct answer is highlighted. '+q.fact+'<div class="feedback-tip">💡 Grammar tip: '+q.tip+'</div>';
+      document.getElementById('tryHint').textContent='';
+      document.getElementById('nextBtn').className='next-btn show';
+    } else {
+      document.getElementById('tryHint').textContent='Not quite! You have 1 attempt left — try again!';
+    }
+  }
+}
+
+function nextQ(){
+  cur++;
+  if(cur>=Qs.length) endQuiz();
+  else loadQ();
+}
+
+function endQuiz(){
+  document.getElementById('quiz-game').style.display='none';
+  document.getElementById('quiz-end').style.display='block';
+  const r=Math.round(score*10)/10;
+  document.getElementById('endScore').textContent=r%1===0?r:r.toFixed(1);
+  const p=score/10;
+  let trophy,title,sub;
+  if(p>=1){trophy='🏆';title='Perfect! Incrível!';sub='You mastered affirmative, negative AND questions. Teacher Fernanda is very proud of you!';}
+  else if(p>=.7){trophy='🌟';title='Very good!';sub='Great work on the grammar forms! Review any tricky questions in the Lesson tab.';}
+  else if(p>=.5){trophy='👏';title='Good effort!';sub='Check the Quick Tips tab and try again — you are getting there!';}
+  else{trophy='📚';title='Keep studying!';sub='Go back to the Lesson tab, review the patterns carefully, then try the quiz again!';}
+  document.getElementById('endTrophy').textContent=trophy;
+  document.getElementById('endTitle').textContent=title;
+  document.getElementById('endSub').textContent=sub;
+}
+
+function restartQuiz(){
+  cur=0;score=0;streak=0;
+  document.getElementById('quiz-end').style.display='none';
+  document.getElementById('quiz-intro').style.display='block';
+}
+</script>
+</body>
+</html>
