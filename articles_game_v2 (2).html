@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Article Adventure – SQA Education</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #2340a0;
+    --blue-light: #dce6ff;
+    --green: #0f6e56;
+    --green-light: #c9f0de;
+    --orange: #e07b00;
+    --orange-light: #fff3dc;
+    --red: #c0392b;
+    --red-light: #fde8e6;
+    --purple: #6b21a8;
+    --purple-light: #f3e8ff;
+    --pink: #9d174d;
+    --pink-light: #fce7f3;
+    --teal: #0f766e;
+    --teal-light: #ccfbf1;
+    --bg: #f4f6ff;
+    --white: #ffffff;
+    --text: #1a1a2e;
+    --muted: #888;
+    --radius: 18px;
+    --shadow: 0 8px 32px rgba(35,64,160,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    color: var(--text);
+  }
+
+  header {
+    background: var(--white);
+    border-bottom: 2px solid var(--blue-light);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo { font-family: 'Fredoka One', cursive; font-size: 22px; color: var(--blue); letter-spacing: 0.02em; }
+  .logo span { color: var(--orange); }
+
+  .score-bar { display: flex; align-items: center; gap: 18px; font-size: 15px; font-weight: 700; color: var(--blue); }
+  .score-pill { background: var(--blue-light); color: var(--blue); border-radius: 30px; padding: 5px 18px; font-size: 15px; font-weight: 800; }
+
+  .screen { display: none; animation: fadeIn 0.4s ease; }
+  .screen.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Welcome ── */
+  #screen-welcome {
+    max-width: 640px;
+    margin: 50px auto;
+    text-align: center;
+    padding: 0 24px;
+  }
+
+  .welcome-emoji { font-size: 72px; margin-bottom: 16px; animation: bounce 1.2s infinite alternate; }
+  @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-12px); } }
+
+  .welcome-title { font-family: 'Fredoka One', cursive; font-size: 44px; color: var(--blue); line-height: 1.1; margin-bottom: 12px; }
+  .welcome-title span { color: var(--orange); }
+  .welcome-sub { font-size: 17px; color: var(--muted); margin-bottom: 28px; line-height: 1.6; }
+
+  .mode-cards {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  .mode-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 20px 18px;
+    box-shadow: var(--shadow);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 140px;
+    flex: 1;
+  }
+
+  .mode-card .icon { font-size: 32px; }
+  .mode-card .mode-label { font-family: 'Fredoka One', cursive; font-size: 16px; }
+  .mode-card .mode-example { font-size: 12px; color: var(--muted); font-style: italic; font-weight: 600; }
+  .mode-card.aff { border-top: 4px solid var(--green); }
+  .mode-card.neg { border-top: 4px solid var(--red); }
+  .mode-card.int { border-top: 4px solid var(--purple); }
+
+  /* ── Lead Form ── */
+  #screen-lead { max-width: 500px; margin: 60px auto; padding: 0 24px; }
+
+  .form-card { background: var(--white); border-radius: var(--radius); padding: 40px 36px; box-shadow: var(--shadow); }
+  .form-title { font-family: 'Fredoka One', cursive; font-size: 28px; color: var(--blue); margin-bottom: 6px; }
+  .form-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; line-height: 1.5; }
+  .form-group { margin-bottom: 18px; }
+
+  label { display: block; font-size: 13px; font-weight: 800; color: var(--blue); margin-bottom: 6px; letter-spacing: 0.04em; text-transform: uppercase; }
+
+  input[type="text"], input[type="email"], input[type="tel"] {
+    width: 100%; padding: 13px 16px; border: 2px solid #e4e2f0; border-radius: 12px;
+    font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--text); background: #fafafa;
+    transition: border-color 0.2s; outline: none;
+  }
+  input:focus { border-color: var(--blue); background: var(--white); }
+  .privacy-note { font-size: 12px; color: var(--muted); margin-top: 10px; text-align: center; }
+
+  /* ── Buttons ── */
+  .btn { display: inline-block; padding: 15px 36px; border-radius: 50px; font-family: 'Nunito', sans-serif; font-size: 17px; font-weight: 800; cursor: pointer; border: none; transition: transform 0.15s, box-shadow 0.15s; text-decoration: none; }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(35,64,160,0.18); }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: var(--blue); color: var(--white); width: 100%; text-align: center; }
+  .btn-orange { background: var(--orange); color: var(--white); width: 100%; text-align: center; font-size: 18px; padding: 17px 36px; }
+  .btn-ghost { background: transparent; color: var(--blue); border: 2px solid var(--blue-light); font-size: 15px; padding: 10px 24px; }
+
+  /* ── Game Screen ── */
+  #screen-game { max-width: 680px; margin: 40px auto; padding: 0 24px; }
+
+  /* Section divider shown between activity groups */
+  .section-banner {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .section-banner .sb-icon { font-size: 48px; margin-bottom: 8px; }
+  .section-banner .sb-title { font-family: 'Fredoka One', cursive; font-size: 28px; margin-bottom: 6px; }
+  .section-banner.aff .sb-title { color: var(--green); }
+  .section-banner.neg .sb-title { color: var(--red); }
+  .section-banner.int .sb-title { color: var(--purple); }
+  .section-banner .sb-desc { font-size: 14px; color: var(--muted); line-height: 1.5; margin-bottom: 18px; }
+  .btn-continue { padding: 13px 36px; border-radius: 50px; border: none; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 16px; cursor: pointer; color: #fff; transition: all 0.15s; }
+  .btn-continue:hover { transform: translateY(-2px); }
+  .btn-continue.aff { background: var(--green); }
+  .btn-continue.neg { background: var(--red); }
+  .btn-continue.int { background: var(--purple); }
+
+  .progress-wrap { margin-bottom: 24px; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; color: var(--blue); margin-bottom: 8px; }
+  .progress-bar { height: 10px; background: var(--blue-light); border-radius: 20px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--blue); border-radius: 20px; transition: width 0.5s ease; }
+
+  /* Activity type pill shown in header label */
+  .type-pill {
+    display: inline-block;
+    padding: 3px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .type-pill.aff { background: var(--green-light); color: var(--green); }
+  .type-pill.neg { background: var(--red-light); color: var(--red); }
+  .type-pill.int { background: var(--purple-light); color: var(--purple); }
+
+  .question-card { background: var(--white); border-radius: var(--radius); padding: 36px 36px 28px; box-shadow: var(--shadow); margin-bottom: 20px; }
+  .question-card.aff { border-top: 5px solid var(--green); }
+  .question-card.neg { border-top: 5px solid var(--red); }
+  .question-card.int { border-top: 5px solid var(--purple); }
+
+  .q-type-badge { display: inline-block; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 14px; }
+  .badge-aff { background: var(--green-light); color: var(--green); }
+  .badge-neg { background: var(--red-light); color: var(--red); }
+  .badge-int { background: var(--purple-light); color: var(--purple); }
+
+  .q-sentence { font-size: 24px; font-weight: 700; color: var(--text); line-height: 1.5; margin-bottom: 28px; }
+  .q-sentence .blank { display: inline-block; min-width: 80px; border-bottom: 3px solid var(--blue); color: var(--blue); font-style: italic; text-align: center; padding: 0 6px; }
+  .q-hint { font-size: 13px; color: var(--muted); margin-bottom: 20px; font-style: italic; }
+
+  .options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .option-btn { padding: 16px 10px; border-radius: 14px; border: 2px solid #e4e2f0; background: var(--bg); font-family: 'Fredoka One', cursive; font-size: 28px; color: var(--text); cursor: pointer; transition: all 0.15s; text-align: center; }
+  .option-btn:hover:not(:disabled) { border-color: var(--blue); background: var(--blue-light); color: var(--blue); transform: translateY(-2px); }
+  .option-btn.correct { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .option-btn.wrong   { border-color: var(--red);   background: var(--red-light);   color: var(--red); }
+  .option-btn:disabled { cursor: default; }
+
+  .fill-input-wrap { display: flex; gap: 12px; align-items: center; }
+  .fill-input { flex: 1; padding: 14px 20px; border: 2px solid #e4e2f0; border-radius: 14px; font-family: 'Fredoka One', cursive; font-size: 26px; color: var(--text); outline: none; transition: border-color 0.2s; text-align: center; }
+  .fill-input:focus { border-color: var(--blue); }
+  .fill-input.correct { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .fill-input.wrong   { border-color: var(--red);   background: var(--red-light);   color: var(--red); }
+
+  .btn-check { padding: 14px 26px; border-radius: 14px; background: var(--blue); color: #fff; border: none; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 16px; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  .btn-check:hover { transform: translateY(-2px); }
+
+  .feedback-box { border-radius: 14px; padding: 14px 18px; margin-top: 16px; font-size: 15px; font-weight: 700; display: none; align-items: flex-start; gap: 10px; }
+  .feedback-box.show { display: flex; }
+  .feedback-box.correct-fb { background: var(--green-light); color: var(--green); }
+  .feedback-box.wrong-fb   { background: var(--red-light);   color: var(--red); }
+  .feedback-icon { font-size: 20px; flex-shrink: 0; }
+  .feedback-text { line-height: 1.5; }
+
+  .btn-next { margin-top: 18px; padding: 13px 36px; border-radius: 50px; background: var(--blue); color: #fff; border: none; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 16px; cursor: pointer; display: none; transition: all 0.15s; }
+  .btn-next:hover { transform: translateY(-2px); }
+  .btn-next.show { display: inline-block; }
+
+  /* ── Results Screen ── */
+  #screen-result { max-width: 580px; margin: 50px auto; padding: 0 24px; text-align: center; }
+
+  .result-card { background: var(--white); border-radius: var(--radius); padding: 48px 36px; box-shadow: var(--shadow); margin-bottom: 24px; }
+  .result-emoji { font-size: 64px; margin-bottom: 12px; }
+  .result-title { font-family: 'Fredoka One', cursive; font-size: 38px; color: var(--blue); margin-bottom: 8px; }
+  .result-score { font-size: 64px; font-weight: 800; color: var(--orange); margin: 12px 0; line-height: 1; }
+  .result-sub { font-size: 16px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+  .stars { font-size: 36px; margin-bottom: 20px; letter-spacing: 4px; }
+
+  .breakdown {
+    display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .breakdown-pill {
+    border-radius: 30px; padding: 8px 20px; font-size: 14px; font-weight: 800;
+  }
+  .breakdown-pill.aff { background: var(--green-light); color: var(--green); }
+  .breakdown-pill.neg { background: var(--red-light); color: var(--red); }
+  .breakdown-pill.int { background: var(--purple-light); color: var(--purple); }
+
+  .cta-card { background: linear-gradient(135deg, #1a1a2e 0%, #2340a0 100%); border-radius: var(--radius); padding: 36px 32px; color: var(--white); text-align: center; }
+  .cta-card h2 { font-family: 'Fredoka One', cursive; font-size: 26px; margin-bottom: 10px; line-height: 1.3; }
+  .cta-card p { font-size: 15px; opacity: 0.85; margin-bottom: 24px; line-height: 1.6; }
+  .cta-card a { display: inline-block; padding: 15px 40px; border-radius: 50px; background: var(--orange); color: var(--white); font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 17px; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 20px rgba(224,123,0,0.4); }
+  .cta-card a:hover { transform: translateY(-2px); }
+
+  .review-list { text-align: left; margin-top: 24px; border-top: 2px solid #f0f0f0; padding-top: 20px; }
+  .review-list h3 { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 12px; }
+  .review-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px; line-height: 1.5; }
+  .review-item:last-child { border-bottom: none; }
+  .ri-icon { font-size: 18px; flex-shrink: 0; }
+  .ri-correct { color: var(--green); }
+  .ri-wrong   { color: var(--red); }
+
+  .toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1a1a2e; color: #fff; padding: 14px 28px; border-radius: 50px; font-size: 15px; font-weight: 700; opacity: 0; transition: all 0.4s; z-index: 999; pointer-events: none; white-space: nowrap; }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  @media (max-width: 500px) {
+    .options { grid-template-columns: repeat(3, 1fr); }
+    .q-sentence { font-size: 19px; }
+    .welcome-title { font-size: 32px; }
+    .mode-cards { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">SQA <span>Education</span></div>
+  <div class="score-bar" id="score-bar" style="display:none;">
+    ⭐ Score: <span class="score-pill" id="score-display">0</span>
+  </div>
+</header>
+
+<!-- SCREEN 1: Welcome -->
+<div id="screen-welcome" class="screen active">
+  <div style="max-width:660px; margin:50px auto; text-align:center; padding:0 24px;">
+    <div class="welcome-emoji">📚</div>
+    <div class="welcome-title">Article <span>Adventure!</span></div>
+    <p class="welcome-sub">Master <strong>a</strong>, <strong>an</strong> &amp; <strong>the</strong> in all three sentence types.<br>Complete all three rounds to earn your stars!</p>
+    <div class="mode-cards">
+      <div class="mode-card aff">
+        <span class="icon">✅</span>
+        <span class="mode-label">Affirmative</span>
+        <span class="mode-example">"She has a cat."</span>
+      </div>
+      <div class="mode-card neg">
+        <span class="icon">❌</span>
+        <span class="mode-label">Negative</span>
+        <span class="mode-example">"He doesn't have an umbrella."</span>
+      </div>
+      <div class="mode-card int">
+        <span class="icon">❓</span>
+        <span class="mode-label">Interrogative</span>
+        <span class="mode-example">"Is that the Eiffel Tower?"</span>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="showScreen('screen-lead')">Start Playing →</button>
+  </div>
+</div>
+
+<!-- SCREEN 2: Lead Capture -->
+<div id="screen-lead" class="screen">
+  <div class="form-card">
+    <div class="form-title">Almost ready! 🎉</div>
+    <p class="form-sub">Enter your details to save your score and get your personalized results. We'll never spam you!</p>
+    <div class="form-group">
+      <label>Your Name</label>
+      <input type="text" id="lead-name" placeholder="e.g. Maria Santos" />
+    </div>
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" id="lead-email" placeholder="e.g. maria@email.com" />
+    </div>
+    <div class="form-group">
+      <label>Phone / WhatsApp</label>
+      <input type="tel" id="lead-phone" placeholder="e.g. +1 305 555 0100" />
+    </div>
+    <br>
+    <button class="btn btn-primary" onclick="startGame()">Let's Play! 🚀</button>
+    <p class="privacy-note">🔒 Your info is safe with us. No spam, ever.</p>
+  </div>
+</div>
+
+<!-- SCREEN 3: Game -->
+<div id="screen-game" class="screen">
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="q-counter">Question 1 of 15</span>
+      <span id="q-type-label"></span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+  <div id="question-area"></div>
+</div>
+
+<!-- SCREEN 4: Results -->
+<div id="screen-result" class="screen">
+  <div class="result-card">
+    <div class="result-emoji" id="result-emoji">🏆</div>
+    <div class="result-title" id="result-title">Amazing!</div>
+    <div class="stars" id="result-stars">⭐⭐⭐</div>
+    <div class="result-score"><span id="final-score">0</span>/15</div>
+    <p class="result-sub" id="result-message"></p>
+    <div class="breakdown" id="breakdown"></div>
+    <div class="review-list" id="review-list"></div>
+  </div>
+
+  <div class="cta-card" id="cta-section" style="display:none;">
+    <h2>Want to improve your English even more?</h2>
+    <p>If you're not a student with us yet, come and join SQA Education! Our expert teachers are ready to help you reach fluency.</p>
+    <a href="https://sqaeducation.org" target="_blank">Apply Now at sqaeducation.org →</a>
+  </div>
+
+  <br>
+  <button class="btn btn-ghost" onclick="restartGame()" style="display:block; width:100%; text-align:center; margin-top:12px;">🔄 Play Again</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Questions ──────────────────────────────────────────────────────────────
+// Each question has: type (mcq/fill), mode (aff/neg/int), sentence, blank, answer, explanation, [options], [hint]
+
+const questions = [
+
+  // ════════════════════════════════════════════
+  //  SECTION 1 – AFFIRMATIVE
+  // ════════════════════════════════════════════
+  {
+    type: 'mcq', mode: 'aff',
+    sentence: '___ apple a day keeps the doctor away.',
+    blank: '___',
+    options: ['a', 'an', 'the'],
+    answer: 'an',
+    explanation: '"Apple" starts with a vowel sound, so we use <strong>an</strong>.'
+  },
+  {
+    type: 'mcq', mode: 'aff',
+    sentence: 'She saw ___ movie last night and loved it.',
+    blank: '___',
+    options: ['a', 'an', 'the'],
+    answer: 'a',
+    explanation: 'It\'s one of many possible movies — not specific — so we use <strong>a</strong>.'
+  },
+  {
+    type: 'mcq', mode: 'aff',
+    sentence: 'Please close ___ door when you leave.',
+    blank: '___',
+    options: ['a', 'an', 'the'],
+    answer: 'the',
+    explanation: 'Both speaker and listener know which door — it\'s specific, so we use <strong>the</strong>.'
+  },
+  {
+    type: 'fill', mode: 'aff',
+    sentence: 'He is ___ honest man.',
+    blank: '___',
+    answer: 'an',
+    hint: '💡 "Honest" has a silent H — what vowel sound comes first?',
+    explanation: '"Honest" has a silent H and starts with the vowel sound <em>o</em>, so we use <strong>an</strong>.'
+  },
+  {
+    type: 'fill', mode: 'aff',
+    sentence: '___ sun rises in the east every morning.',
+    blank: '___',
+    answer: 'the',
+    hint: '💡 There is only one of this in our solar system!',
+    explanation: 'There is only one sun — it\'s unique, so we always use <strong>the</strong>.'
+  },
+
+  // ════════════════════════════════════════════
+  //  SECTION 2 – NEGATIVE
+  // ════════════════════════════════════════════
+  {
+    type: 'mcq', mode: 'neg',
+    sentence: 'I don\'t have ___ umbrella with me today.',
+    blank: '___',
+    options: ['a', 'an', 'the'],
+    answer: 'an',
+    explanation: '"Umbrella" starts with a vowel sound — we still use <strong>an</strong> in negative sentences.'
+  },
+  {
+    type: 'mcq', mode: 'neg',
+    sentence: 'She didn\'t eat ___ breakfast this morning.',
+    blank: '___',
+    options: ['a', 'an', 'the'],
+    answer: 'a',
+    explanation: '"Breakfast" starts with a consonant sound, so we use <strong>a</strong> — the same rules apply in negatives.'
+  },
+  {
+    type: 'mcq', mode: 'neg',
+    sentence: 'He doesn\'t own ___ car — he takes the bus.',
+    blank: '___',
+    options: ['a', 'an', 'the'],
+    answer: 'a',
+    explanation: 'We\'re talking about any car in general (not a specific one), so we use <strong>a</strong>.'
+  },
+  {
+    type: 'fill', mode: 'neg',
+    sentence: 'They haven\'t visited ___ Louvre yet.',
+    blank: '___',
+    answer: 'the',
+    hint: '💡 Is the Louvre a unique landmark or one of many?',
+    explanation: 'Unique, famous landmarks always take <strong>the</strong> — even in negative sentences.'
+  },
+  {
+    type: 'fill', mode: 'neg',
+    sentence: 'I can\'t find ___ honest answer to that question.',
+    blank: '___',
+    answer: 'an',
+    hint: '💡 "Honest" has a silent H. What sound does it start with?',
+    explanation: '"Honest" starts with the vowel sound <em>o</em>, so we use <strong>an</strong>.'
+  },
+
+  // ════════════════════════════════════════════
+  //  SECTION 3 – INTERROGATIVE
+  // ════════════════════════════════════════════
+  {
+    type: 'mcq', mode: 'int',
+    sentence: 'Is that ___ interesting book you\'re reading?',
+    blank: '___',
+    options: ['a', 'an', 'the'],
+    answer: 'an',
+    explanation: '"Interesting" starts with a vowel sound — we use <strong>an</strong> in questions too!'
+  },
+  {
+    type: 'mcq', mode: 'int',
+    sentence: 'Did you turn off ___ oven before leaving?',
+    blank: '___',
+    options: ['a', 'an', 'the'],
+    answer: 'the',
+    explanation: 'Both speaker and listener know which oven — it\'s shared context, so we use <strong>the</strong>.'
+  },
+  {
+    type: 'mcq', mode: 'int',
+    sentence: 'Have you ever been to ___ United States?',
+    blank: '___',
+    options: ['a', 'an', 'the'],
+    answer: 'the',
+    explanation: 'Country names with "United" or in plural form always take <strong>the</strong>.'
+  },
+  {
+    type: 'fill', mode: 'int',
+    sentence: 'Do you want ___ apple or an orange?',
+    blank: '___',
+    answer: 'an',
+    hint: '💡 Think about the first sound of "apple".',
+    explanation: '"Apple" starts with a vowel sound, so we use <strong>an</strong>.'
+  },
+  {
+    type: 'fill', mode: 'int',
+    sentence: 'Can I borrow ___ pen? I forgot mine.',
+    blank: '___',
+    answer: 'a',
+    hint: '💡 Any pen will do — not a specific one.',
+    explanation: 'We\'re asking for any pen, not a specific one, so we use <strong>a</strong>.'
+  }
+];
+
+const TOTAL_Q = questions.length; // 15
+
+// Section banners shown before each mode group
+const sectionBanners = {
+  aff: {
+    cls: 'aff',
+    icon: '✅',
+    title: 'Affirmative Sentences',
+    desc: 'These are normal, positive statements. Choose the correct article: <strong>a</strong>, <strong>an</strong>, or <strong>the</strong>.'
+  },
+  neg: {
+    cls: 'neg',
+    icon: '❌',
+    title: 'Negative Sentences',
+    desc: 'These sentences use <strong>don\'t</strong>, <strong>doesn\'t</strong>, <strong>didn\'t</strong>, etc. The article rules stay the same — can you spot them?'
+  },
+  int: {
+    cls: 'int',
+    icon: '❓',
+    title: 'Interrogative Sentences',
+    desc: 'These are questions. The verb comes first — but the article rules are exactly the same. Let\'s go!'
+  }
+};
+
+// ── State ───────────────────────────────────────────────────────────────────
+let currentQ = 0;
+let score = 0;
+let answers = [];
+let userName = '';
+let answered = false;
+let pendingBanner = null; // mode key for next section banner to show
+
+// ── Screens ─────────────────────────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ── Start Game ───────────────────────────────────────────────────────────────
+function startGame() {
+  const name  = document.getElementById('lead-name').value.trim();
+  const email = document.getElementById('lead-email').value.trim();
+  const phone = document.getElementById('lead-phone').value.trim();
+
+  if (!name || !email || !phone) { showToast('Please fill in all fields 😊'); return; }
+  if (!email.includes('@')) { showToast('Please enter a valid email address'); return; }
+
+  userName = name;
+
+  // ── Klaviyo Integration ──────────────────────────────────────────────────
+  const KLAVIYO_PUBLIC_KEY = 'XyxeD7';
+  const KLAVIYO_LIST_ID    = 'VCNQdb';
+
+  const firstName = name.split(' ')[0];
+  const lastName  = name.split(' ').slice(1).join(' ') || '';
+
+  const payload = {
+    data: {
+      type: 'subscription',
+      attributes: {
+        profile: {
+          data: {
+            type: 'profile',
+            attributes: {
+              email: email,
+              phone_number: phone,
+              first_name: firstName,
+              last_name: lastName,
+              properties: {
+                source: 'Article Adventure Game – Aff/Neg/Int',
+                signup_date: new Date().toISOString()
+              }
+            }
+          }
+        }
+      },
+      relationships: {
+        list: {
+          data: { type: 'list', id: KLAVIYO_LIST_ID }
+        }
+      }
+    }
+  };
+
+  fetch(`https://a.klaviyo.com/client/subscriptions/?company_id=${KLAVIYO_PUBLIC_KEY}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'revision': '2023-12-15' },
+    body: JSON.stringify(payload)
+  })
+  .then(res => {
+    if (res.ok || res.status === 202) {
+      console.log('✅ Klaviyo: contact added successfully');
+    } else {
+      res.text().then(t => console.warn('Klaviyo error:', res.status, t));
+    }
+  })
+  .catch(err => console.warn('Klaviyo fetch error:', err));
+
+  // Local backup
+  const leads = JSON.parse(localStorage.getItem('sqa_leads') || '[]');
+  leads.push({ name, email, phone, date: new Date().toISOString() });
+  localStorage.setItem('sqa_leads', JSON.stringify(leads));
+  // ── End Klaviyo ──────────────────────────────────────────────────────────
+
+  currentQ = 0; score = 0; answers = []; answered = false;
+  document.getElementById('score-bar').style.display = 'flex';
+  document.getElementById('score-display').textContent = '0';
+  showScreen('screen-game');
+
+  // Show first section banner (affirmative)
+  showSectionBanner('aff', function() { renderQuestion(); });
+}
+
+// ── Section Banner ───────────────────────────────────────────────────────────
+function showSectionBanner(modeKey, callback) {
+  const b = sectionBanners[modeKey];
+  const area = document.getElementById('question-area');
+
+  // Hide progress during banner
+  document.getElementById('progress-fill').style.width = ((currentQ / TOTAL_Q) * 100) + '%';
+
+  area.innerHTML = `
+    <div class="section-banner ${b.cls}">
+      <div class="sb-icon">${b.icon}</div>
+      <div class="sb-title">${b.title}</div>
+      <p class="sb-desc">${b.desc}</p>
+      <button class="btn-continue ${b.cls}" id="banner-btn">Let's go! →</button>
+    </div>`;
+
+  document.getElementById('banner-btn').addEventListener('click', function() {
+    area.innerHTML = '';
+    callback();
+  });
+}
+
+// ── Render Question ──────────────────────────────────────────────────────────
+let bannerShownForQ = -1;
+
+function renderQuestion() {
+  answered = false;
+  const q = questions[currentQ];
+  const pct = ((currentQ + 1) / TOTAL_Q) * 100;
+
+  // Show section banner only once when crossing into a new mode
+  if (currentQ > 0 && bannerShownForQ !== currentQ) {
+    const prevMode = questions[currentQ - 1].mode;
+    if (q.mode !== prevMode) {
+      bannerShownForQ = currentQ;
+      showSectionBanner(q.mode, function() { renderQuestion(); });
+      return;
+    }
+  }
+
+  document.getElementById('q-counter').textContent = 'Question ' + (currentQ + 1) + ' of ' + TOTAL_Q;
+  document.getElementById('progress-fill').style.width = pct + '%';
+
+  const modeLabels = { aff: '✅ Affirmative', neg: '❌ Negative', int: '❓ Interrogative' };
+  const badgeClasses = { aff: 'badge-aff', neg: 'badge-neg', int: 'badge-int' };
+  const cardClass = q.mode;
+
+  document.getElementById('q-type-label').innerHTML =
+    `<span class="type-pill ${q.mode}">${modeLabels[q.mode]}</span>`;
+
+  const area = document.getElementById('question-area');
+
+  if (q.type === 'mcq') {
+    const card = document.createElement('div');
+    card.className = 'question-card ' + cardClass;
+
+    const badge = document.createElement('span');
+    badge.className = 'q-type-badge ' + badgeClasses[q.mode];
+    badge.textContent = modeLabels[q.mode].replace(/^[^ ]+ /, '') + ' – Multiple Choice';
+    card.appendChild(badge);
+
+    const sentence = document.createElement('p');
+    sentence.className = 'q-sentence';
+    sentence.innerHTML = formatSentence(q.sentence, q.blank);
+    card.appendChild(sentence);
+
+    const optionsDiv = document.createElement('div');
+    optionsDiv.className = 'options';
+    optionsDiv.id = 'options';
+
+    q.options.forEach(function(opt) {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = opt;
+      btn.addEventListener('click', function() { checkMCQ(btn, opt, q.answer, q.explanation); });
+      optionsDiv.appendChild(btn);
+    });
+    card.appendChild(optionsDiv);
+
+    const fb = document.createElement('div');
+    fb.className = 'feedback-box'; fb.id = 'feedback';
+    card.appendChild(fb);
+
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'btn-next'; nextBtn.id = 'btn-next';
+    nextBtn.textContent = currentQ + 1 < TOTAL_Q ? 'Next →' : 'See Results 🏆';
+    nextBtn.addEventListener('click', nextQuestion);
+    card.appendChild(nextBtn);
+
+    area.innerHTML = '';
+    area.appendChild(card);
+
+  } else if (q.type === 'fill') {
+    const card = document.createElement('div');
+    card.className = 'question-card ' + cardClass;
+
+    const badge = document.createElement('span');
+    badge.className = 'q-type-badge ' + badgeClasses[q.mode];
+    badge.textContent = modeLabels[q.mode].replace(/^[^ ]+ /, '') + ' – Fill in the Blank';
+    card.appendChild(badge);
+
+    const sentence = document.createElement('p');
+    sentence.className = 'q-sentence';
+    sentence.innerHTML = formatSentence(q.sentence, q.blank);
+    card.appendChild(sentence);
+
+    if (q.hint) {
+      const hint = document.createElement('p');
+      hint.className = 'q-hint';
+      hint.textContent = q.hint;
+      card.appendChild(hint);
+    }
+
+    const inputWrap = document.createElement('div');
+    inputWrap.className = 'fill-input-wrap';
+
+    const input = document.createElement('input');
+    input.className = 'fill-input'; input.id = 'fill-answer';
+    input.placeholder = 'a / an / the'; input.maxLength = 3;
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') checkFill(q.answer, q.explanation);
+    });
+    inputWrap.appendChild(input);
+
+    const checkBtn = document.createElement('button');
+    checkBtn.className = 'btn-check';
+    checkBtn.textContent = 'Check ✓';
+    checkBtn.addEventListener('click', function() { checkFill(q.answer, q.explanation); });
+    inputWrap.appendChild(checkBtn);
+    card.appendChild(inputWrap);
+
+    const fb = document.createElement('div');
+    fb.className = 'feedback-box'; fb.id = 'feedback';
+    card.appendChild(fb);
+
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'btn-next'; nextBtn.id = 'btn-next';
+    nextBtn.textContent = currentQ + 1 < TOTAL_Q ? 'Next →' : 'See Results 🏆';
+    nextBtn.addEventListener('click', nextQuestion);
+    card.appendChild(nextBtn);
+
+    area.innerHTML = '';
+    area.appendChild(card);
+    setTimeout(function() { document.getElementById('fill-answer').focus(); }, 100);
+  }
+}
+
+function formatSentence(sentence, blank) {
+  return sentence.replace(blank, '<span class="blank">&nbsp;&nbsp;&nbsp;&nbsp;</span>');
+}
+
+// ── MCQ Logic ───────────────────────────────────────────────────────────────
+function checkMCQ(btn, chosen, correct, explanation) {
+  if (answered) return;
+  answered = true;
+
+  const allBtns = document.querySelectorAll('.option-btn');
+  allBtns.forEach(b => b.disabled = true);
+
+  const isCorrect = chosen === correct;
+  if (isCorrect) { score++; updateScore(); }
+
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) {
+    allBtns.forEach(b => { if (b.textContent === correct) b.classList.add('correct'); });
+  }
+
+  answers.push({ q: questions[currentQ].sentence, mode: questions[currentQ].mode, chosen, correct, ok: isCorrect });
+  showFeedback(isCorrect, explanation);
+  document.getElementById('btn-next').classList.add('show');
+}
+
+// ── Fill Logic ──────────────────────────────────────────────────────────────
+function checkFill(correct, explanation) {
+  if (answered) return;
+  const input = document.getElementById('fill-answer');
+  const chosen = input.value.trim().toLowerCase();
+  if (!chosen) { showToast('Type your answer first!'); return; }
+
+  answered = true;
+  const isCorrect = chosen === correct;
+  if (isCorrect) { score++; updateScore(); }
+
+  input.classList.add(isCorrect ? 'correct' : 'wrong');
+  input.value = isCorrect ? chosen : `${chosen} (answer: ${correct})`;
+  input.disabled = true;
+  document.querySelector('.btn-check').disabled = true;
+
+  answers.push({ q: questions[currentQ].sentence, mode: questions[currentQ].mode, chosen, correct, ok: isCorrect });
+  showFeedback(isCorrect, explanation);
+  document.getElementById('btn-next').classList.add('show');
+}
+
+// ── Feedback ────────────────────────────────────────────────────────────────
+function showFeedback(isCorrect, explanation) {
+  const fb = document.getElementById('feedback');
+  fb.className = `feedback-box show ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
+  fb.innerHTML = `
+    <span class="feedback-icon">${isCorrect ? '✅' : '❌'}</span>
+    <span class="feedback-text">
+      <strong>${isCorrect ? 'Correct! Well done!' : 'Not quite!'}</strong><br>
+      ${explanation}
+    </span>`;
+}
+
+// ── Next Question ─────────────────────────────────────────────────────────────
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= TOTAL_Q) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+// ── Score ────────────────────────────────────────────────────────────────────
+function updateScore() {
+  document.getElementById('score-display').textContent = score;
+}
+
+// ── Results ──────────────────────────────────────────────────────────────────
+function showResults() {
+  document.getElementById('score-bar').style.display = 'none';
+  showScreen('screen-result');
+
+  document.getElementById('final-score').textContent = score;
+
+  // Per-section breakdown
+  const breakdown = { aff: { right: 0, total: 0 }, neg: { right: 0, total: 0 }, int: { right: 0, total: 0 } };
+  answers.forEach(a => {
+    breakdown[a.mode].total++;
+    if (a.ok) breakdown[a.mode].right++;
+  });
+
+  const modeNames = { aff: '✅ Affirmative', neg: '❌ Negative', int: '❓ Interrogative' };
+  document.getElementById('breakdown').innerHTML = Object.keys(breakdown).map(m =>
+    `<div class="breakdown-pill ${m}">${modeNames[m]}: ${breakdown[m].right}/${breakdown[m].total}</div>`
+  ).join('');
+
+  let emoji, title, stars, message;
+  const pct = score / TOTAL_Q;
+  if (pct === 1) {
+    emoji = '🏆'; title = `Perfect, ${userName}!`; stars = '⭐⭐⭐';
+    message = 'Every single one correct! You\'ve mastered articles in all three sentence types!';
+  } else if (pct >= 0.8) {
+    emoji = '🎉'; title = `Great job, ${userName}!`; stars = '⭐⭐⭐';
+    message = 'You have a very strong understanding of articles across all sentence types!';
+  } else if (pct >= 0.6) {
+    emoji = '💪'; title = `Keep going, ${userName}!`; stars = '⭐⭐';
+    message = 'You\'re on the right track! Check the breakdown above to see where to focus next.';
+  } else {
+    emoji = '📖'; title = `Don\'t give up, ${userName}!`; stars = '⭐';
+    message = 'Articles can be tricky across all sentence types! With the right teacher, you\'ll get there fast.';
+  }
+
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-stars').textContent = stars;
+  document.getElementById('result-message').textContent = message;
+
+  const reviewEl = document.getElementById('review-list');
+  reviewEl.innerHTML = `<h3>Your Answers</h3>` + answers.map(a => `
+    <div class="review-item">
+      <span class="ri-icon ${a.ok ? 'ri-correct' : 'ri-wrong'}">${a.ok ? '✅' : '❌'}</span>
+      <span>
+        <strong>${a.q.replace('___', `<u>${a.correct}</u>`)}</strong><br>
+        ${a.ok ? `You answered: <strong>${a.chosen}</strong>` : `You said <strong>${a.chosen}</strong>, correct: <strong>${a.correct}</strong>`}
+      </span>
+    </div>`).join('');
+
+  document.getElementById('cta-section').style.display = 'block';
+}
+
+// ── Restart ───────────────────────────────────────────────────────────────────
+function restartGame() {
+  currentQ = 0; score = 0; answers = []; answered = false; bannerShownForQ = -1;
+  document.getElementById('score-bar').style.display = 'flex';
+  document.getElementById('score-display').textContent = '0';
+  showScreen('screen-game');
+  showSectionBanner('aff', function() { renderQuestion(); });
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>
